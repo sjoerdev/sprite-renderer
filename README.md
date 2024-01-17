@@ -1,2 +1,2 @@
-# sprite-renderer
+# Sprite Renderer
 A sprite renderer using OpenGL
