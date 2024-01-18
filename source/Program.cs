@@ -19,7 +19,7 @@ class Window : GameWindow
 
     static NativeWindowSettings windowSettings = new NativeWindowSettings()
     {
-        Title = "Sjoerd's Voxel Engine",
+        Title = "opengl sprite renderer",
         APIVersion = new Version(3, 3),
         ClientSize = new Vector2i(1280, 720)
     };
