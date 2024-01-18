@@ -12,10 +12,11 @@
 
   <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.8.2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="shaders\**" CopyToPublishDirectory="PreserveNewest"/>
+    <Content Include="shaders\**" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,14 @@
 using OpenTK.Graphics.OpenGL;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
+using System.Runtime.InteropServices;
 
 namespace Project;
 
 public class Shader
 {
-    public int pgrm;
+    public int program;
     public int vbo;
     public int vao;
 
@@ -29,12 +33,12 @@ public class Shader
         if (fStatus != 1) throw new Exception("Fragment shader failed to compile: " + GL.GetShaderInfoLog(frag));
 
         // create main shader program
-        pgrm = GL.CreateProgram();
-        GL.AttachShader(pgrm, vert);
-        GL.AttachShader(pgrm, frag);
-        GL.LinkProgram(pgrm);
-        GL.DetachShader(pgrm, vert);
-        GL.DetachShader(pgrm, frag);
+        program = GL.CreateProgram();
+        GL.AttachShader(program, vert);
+        GL.AttachShader(program, frag);
+        GL.LinkProgram(program);
+        GL.DetachShader(program, vert);
+        GL.DetachShader(program, frag);
 
         // delete shaders
         GL.DeleteShader(vert);
@@ -64,14 +68,46 @@ public class Shader
         GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
         GL.EnableVertexAttribArray(0);
         GL.BindVertexArray(0);
+
+        GL.Enable(EnableCap.Blend);
+        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
     }
 
-    public void Render(int width, int height)
+    public void RenderSprite(string path, int x, int y)
     {
-        GL.Viewport(0, 0, width, height);
-        GL.UseProgram(pgrm);
+        GL.UseProgram(program);
         GL.Clear(ClearBufferMask.ColorBufferBit);
+
+        int texture = LoadTexture(path);
+
+        // Bind texture before setting uniforms
+        GL.ActiveTexture(TextureUnit.Texture0);
+        GL.BindTexture(TextureTarget.Texture2D, texture);
+        GL.Uniform1(GL.GetUniformLocation(program, "tex"), 0);
+
         GL.BindVertexArray(vao);
         GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+    }
+
+    public int LoadTexture(string path)
+    {
+        int textureId;
+
+        Image<Rgba32> image = Image.Load<Rgba32>(path);
+        var pixelMemoryGroup = image.GetPixelMemoryGroup();
+
+        GL.GenTextures(1, out textureId);
+        GL.BindTexture(TextureTarget.Texture2D, textureId);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+
+        /// Load pixel data into the texture
+        IntPtr pixelData = Marshal.UnsafeAddrOfPinnedArrayElement(pixelMemoryGroup[0].ToArray(), 0);
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixelData);
+
+        // Unbind the texture
+        GL.BindTexture(TextureTarget.Texture2D, 0);
+
+        return textureId;
     }
 }

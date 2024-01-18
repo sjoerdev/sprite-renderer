@@ -1,6 +1,7 @@
 ﻿using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Mathematics;
+using OpenTK.Graphics.OpenGL;
 
 namespace Project;
 
@@ -35,7 +36,10 @@ class Window : GameWindow
     protected override void OnRenderFrame(FrameEventArgs args)
     {
         base.OnRenderFrame(args);
-        shader.Render(ClientSize.X, ClientSize.Y);
+        GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
+
+        shader.RenderSprite("sprites/idle.png", 8, 8);
+
         Context.SwapBuffers();
     }
 }

@@ -7,6 +7,5 @@ uniform sampler2D tex;
 
 void main()
 {
-    //fragColor = texture(tex, ndc * 0.5 + 0.5);
-    fragColor = vec4(0, 0, 1, 1);
+    fragColor = texture(tex, -ndc * 0.5 + 0.5);
 }
