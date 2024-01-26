@@ -3,6 +3,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Runtime.InteropServices;
+using OpenTK.Mathematics;
 
 namespace Project;
 
@@ -109,5 +110,30 @@ public class Shader
         GL.BindTexture(TextureTarget.Texture2D, 0);
 
         return textureId;
+    }
+
+    public void SetFloat(string name, float value)
+    {
+        GL.Uniform1(GL.GetUniformLocation(program, name), value);
+    }
+
+    public void SetInt(string name, int value)
+    {
+        GL.Uniform1(GL.GetUniformLocation(program, name), value);
+    }
+
+    public void SetBool(string name, bool value)
+    {
+        GL.Uniform1(GL.GetUniformLocation(program, name), value ? 1 : 0);
+    }
+
+    public void SetVector2(string name, Vector2 value)
+    {
+        GL.Uniform2(GL.GetUniformLocation(program, name), value.X, value.Y);
+    }
+
+    public void SetVector3(string name, Vector3 value)
+    {
+        GL.Uniform3(GL.GetUniformLocation(program, name), value.X, value.Y, value.Z);
     }
 }
