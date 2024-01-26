@@ -74,7 +74,7 @@ public class Shader
         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
     }
 
-    public void RenderSprite(string path, Vector2 resolution)
+    public void RenderSprite(string path, Vector2 resolution, Vector2 position)
     {
         GL.UseProgram(program);
         GL.Clear(ClearBufferMask.ColorBufferBit);
@@ -82,6 +82,8 @@ public class Shader
         int texture = LoadTexture(path);
 
         SetVector2("resolution", resolution);
+        SetVector2("size", new Vector2(16, 26));
+        SetVector2("position", position);
 
         // Bind texture before setting uniforms
         GL.ActiveTexture(TextureUnit.Texture0);

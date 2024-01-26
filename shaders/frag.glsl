@@ -5,14 +5,19 @@ out vec4 fragColor;
 
 uniform sampler2D tex;
 uniform vec2 resolution;
+uniform vec2 size;
+uniform vec2 position;
 
-float scale = 0.5; // scale as a factor of vertical pixels
+int pixelScale = 16;
 
 void main()
 {
-    float aspectX = resolution.x / resolution.y;
-    float aspectY = resolution.y / resolution.x;
-    vec2 uv = (-vec2(ndc.x * aspectX, ndc.y * aspectY) / scale) + 0.5;
+    float uvScale = resolution.y / size.y;
 
-    fragColor = texture(tex, uv);
+    float spriteAspect = size.y / size.x;
+    float resAspect = resolution.x / resolution.y;
+    
+    vec2 uv = (-vec2(ndc.x * resAspect * spriteAspect, ndc.y) * uvScale / pixelScale) + 0.5;
+
+    fragColor = texture(tex, uv + position);
 }
