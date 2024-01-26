@@ -18,6 +18,8 @@ class Window : GameWindow
 {
     Shader shader;
 
+    float timer = 0;
+
     static NativeWindowSettings windowSettings = new NativeWindowSettings()
     {
         Title = "opengl sprite renderer",
@@ -37,8 +39,10 @@ class Window : GameWindow
     {
         base.OnRenderFrame(args);
         GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
+        timer += (float)args.Time * 4;
 
-        shader.RenderSprite("sprites/idle.png", 8, 8);
+        if (MathF.Floor(timer) % 2 != 0) shader.RenderSprite("sprites/idle.png", Size);
+        else shader.RenderSprite("sprites/walk.png", Size);
 
         Context.SwapBuffers();
     }

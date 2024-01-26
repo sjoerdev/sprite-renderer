@@ -74,12 +74,14 @@ public class Shader
         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
     }
 
-    public void RenderSprite(string path, int x, int y)
+    public void RenderSprite(string path, Vector2 resolution)
     {
         GL.UseProgram(program);
         GL.Clear(ClearBufferMask.ColorBufferBit);
 
         int texture = LoadTexture(path);
+
+        SetVector2("resolution", resolution);
 
         // Bind texture before setting uniforms
         GL.ActiveTexture(TextureUnit.Texture0);
@@ -101,6 +103,10 @@ public class Shader
         GL.BindTexture(TextureTarget.Texture2D, textureId);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToBorder);
 
         /// Load pixel data into the texture
         IntPtr pixelData = Marshal.UnsafeAddrOfPinnedArrayElement(pixelMemoryGroup[0].ToArray(), 0);
